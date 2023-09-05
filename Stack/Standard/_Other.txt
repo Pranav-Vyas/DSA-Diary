@@ -1,0 +1,4 @@
+
+Stock span - https://leetcode.com/problems/online-stock-span/
+
+Celebrity problem - https://www.codingninjas.com/studio/problems/the-celebrity-problem_982769
