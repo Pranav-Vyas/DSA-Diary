@@ -2,6 +2,8 @@
 # Detect cycle in undirected graph
 # https://www.codingninjas.com/studio/problems/detect-cycle-in-an-undirected-graph-_758967
 
+''' Using BFS '''
+
 from collections import *
 
 def detect(graph,n):
@@ -33,3 +35,32 @@ for _ in range(E):
 	graph[u].append(v)
 	graph[v].append(u)
 print(detect(graph,V))
+
+''' Using DFS '''
+
+'''
+class Solution {
+  isCycleUtil(u, par, adj, vis) {
+      vis[u] = true;
+      for (let j = 0; j < adj[u].length; j++) {
+          let v = adj[u][j];
+          if (v == par) continue; // this line is important, do not put ===
+          if (vis[v]) return true;
+          if (this.isCycleUtil(v, u, adj, vis)) return true;
+      }
+      return false;
+  }
+
+  isCycle(V, adj) {
+      let vis = new Array(V);
+      vis.fill(false);
+      for (let i = 0; i < V; i++) {
+          if (!vis[i]) {
+              let f = this.isCycleUtil(i, -1, adj, vis);
+              if (f) return true;
+          }
+      }
+      return false;
+  }
+}
+'''
