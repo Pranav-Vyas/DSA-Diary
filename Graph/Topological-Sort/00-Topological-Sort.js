@@ -24,3 +24,29 @@ class Solution
         return this.stack.reverse();
     }
 }
+
+// KAHN'S algorithm
+
+/*
+
+from collections import deque
+class Solution:
+    def topoSort(self, n, adj):
+        indegree = [0 for _ in range(n)]
+        for i in range(n):
+            for u in adj[i]:
+                indegree[u] += 1
+        q = deque()
+        ans = []
+        for i,d in enumerate(indegree):
+            if not d:
+                q.append(i)
+        while q:
+            u = q.popleft()
+            ans.append(u)
+            for v in adj[u]:
+                indegree[v] -= 1
+                if not indegree[v]:
+                    q.append(v)
+        return ans
+*/
