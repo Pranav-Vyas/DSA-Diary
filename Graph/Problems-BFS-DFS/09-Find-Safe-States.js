@@ -33,3 +33,31 @@ var eventualSafeNodes = function(graph) {
   })
   return ans;
 };
+
+/************ Another solution - Topological Sort ******************* */
+
+/*
+from collections import deque
+class Solution:
+    def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
+        n = len(graph)
+        adj = [[] for _ in range(n)]
+        indeg = [0 for _ in range(n)]
+        for u in range(n):
+            for v in graph[u]:
+                adj[v].append(u)
+                indeg[u] += 1
+        q = deque()
+        topo = []
+        for i,d in enumerate(indeg):
+            if not d:
+                q.append(i)
+        while q:
+            u = q.popleft()
+            topo.append(u)
+            for v in adj[u]:
+                indeg[v] -= 1
+                if not indeg[v]:
+                    q.append(v)
+        return sorted(topo)
+*/
