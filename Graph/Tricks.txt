@@ -1,0 +1,8 @@
+Check if any of the below methods work:
+
+- BFS
+- DFS
+- Cycle Detect
+- Topo sort - method 1
+- Topo sort - Kahn's algo
+- Reverse Edges

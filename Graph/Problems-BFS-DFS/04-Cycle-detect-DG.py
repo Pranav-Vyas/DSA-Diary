@@ -6,7 +6,6 @@
 
 
 class Solution:
-    
     #Function to detect cycle in a directed graph.
     def isCyclic(self, n, adj):
         visited = [False] * n
