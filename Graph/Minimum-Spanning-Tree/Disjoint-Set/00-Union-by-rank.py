@@ -4,9 +4,9 @@
 
 # vertices = v
 
-def union_by_rank(v, edges):
-  rank = [0 for _ in range(v)]
-  parent = [i for i in range(v)]
+def union_by_rank(n, edges):
+  rank = [0 for _ in range(n)]
+  parent = [i for i in range(n)]
 
   def find(u):
     if u != parent[u]:
