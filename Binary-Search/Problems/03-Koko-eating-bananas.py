@@ -23,3 +23,5 @@ class Solution:
 ''' Similar Problems '''
 
 # https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/submissions/
+# https://www.geeksforgeeks.org/problems/smallest-divisor/1
+# https://www.geeksforgeeks.org/problems/capacity-to-ship-packages-within-d-days/1
