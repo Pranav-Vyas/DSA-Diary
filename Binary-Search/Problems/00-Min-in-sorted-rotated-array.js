@@ -23,3 +23,15 @@ var findMin = function(nums) {
   }
   return ans;
 };
+
+/**
+ * Application:
+ * 
+ * Given an ascending sorted rotated array Arr of distinct integers of size N. 
+ * The array is right rotated K times. Find the value of K.
+ * 
+ * arr = [4,5,1,2,3]
+ * ans = 2 times
+ * 
+ * problem = https://www.geeksforgeeks.org/problems/rotation4723/1
+ */
