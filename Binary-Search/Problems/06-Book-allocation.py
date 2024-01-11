@@ -22,3 +22,10 @@ def findPages(arr, n, m):
         else:
             high = mid-1
     return low
+
+'''
+SIMILAR PROBLEMS
+
+- https://www.codingninjas.com/studio/problems/painter-s-partition-problem_1089557
+- https://www.codingninjas.com/studio/problems/largest-subarray-sum-minimized_7461751
+'''
