@@ -48,3 +48,5 @@ class Solution:
             else:
                 low = mid1+1
         return 0
+
+# Similar problem: https://www.geeksforgeeks.org/problems/k-th-element-of-two-sorted-array1317/1
