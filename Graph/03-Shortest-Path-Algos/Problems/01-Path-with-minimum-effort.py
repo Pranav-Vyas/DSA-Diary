@@ -5,6 +5,32 @@ problem - https://practice.geeksforgeeks.org/problems/path-with-minimum-effort/1
 # Dijkstra's algo
 
 from heapq import *
+class Solution:
+        
+    def MinimumEffort(self, a):
+        n = len(a)
+        m = len(a[0])
+        pq = [(0,0,0)]
+        mat = [[float("inf") for i in range(m)] for j in range(n)]
+        mat[0][0] = 0
+        delRow = [0,1,0,-1]
+        delCol = [1,0,-1,0]
+        while pq:
+            dist,x,y = heappop(pq)
+            if x == n-1 and y == m-1:
+                return dist
+            for k in range(4):
+                p,q = x+delRow[k],y+delCol[k]
+                if p >= 0 and q >= 0 and p <n and q < m:
+                    newDist = max(dist,abs(a[p][q] - a[x][y]))
+                    if newDist < mat[p][q]:
+                        mat[p][q] = newDist
+                        heappush(pq, (newDist, p, q))
+        return mat[n-1][m-1]
+    
+'''
+
+from heapq import *
 
 class Solution:
     def MinimumEffort(self, a):
@@ -26,3 +52,4 @@ class Solution:
                     mat[p][q] = max(mat[x][y], abs(a[x][y] - a[p][q]))
                     heappush(pq, (p,q))
         return 0
+'''

@@ -1,0 +1,62 @@
+
+------ 1's compliment ---------
+
+13 ---> 1101
+Flip bits ---> 0010
+
+----- 2's compliment ----------
+
+1. find 1's compliment
+2. add 1 to it
+
+13 ---> 1101
+1's compliment = 0010
+
+add 1 
+  0010
+  +  1
+  0011
+
+2's compliment = 0011
+
+------- AND Operation --------
+- 0 if any one is 0
+- 1 if both are 1
+
+------- OR Operation ---------
+- 1 if any one is 1
+- 0 if both are 0
+
+-------- XOR ----------
+- if 1's are odd ---> 1
+- if 1's are even ---> 0
+
+----  Right shift >> 
+
+  13 >> 1
+  1101 >> 1 = 110 (Shift all bit to right by one position)
+  13 >> 1 = 6
+
+  1101 >> 2 = 11 (3)
+  1101 >> 4 = 0 (0)
+
+  ******** TRICK ********
+    x >> k = x // (2**k)
+    13 >> 1 =====> 13 // (2**1) ========> 6
+    13 >> 2 =====> 13 // (2**2) ========> 3
+
+** NOTE 
+int x = 13, computer stores it in 31 bits and begining bit is used for sign (+ in this case)
+int x = -13, computer stores it in 31 bits and begining bit is used for sign (- in this case)
+0 is for positive and 1 is for negative
+Largest possible value that can be stored in int --> 2**31 - 1
+Smallest value that can be stored in int ---> -2**31
+
+------ Left Shift <<
+
+  13 << 1
+  1101 << 1 = 11010
+
+  ******* TRICK *********
+  x << k = x * (2**k)
+  
