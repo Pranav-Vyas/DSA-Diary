@@ -115,3 +115,34 @@ Time complexity
   
 </details>
 
+___
+
+### Question - [https://cses.fi/problemset/task/1138](https://cses.fi/problemset/task/1138)
+Path queries
+
+<details>
+  <summary>Description</summary>
+You are given a rooted tree consisting of n nodes. The nodes are numbered 1,2,\ldots,n, and node 1 is the root. Each node has a value.
+Your task is to process following types of queries:
+
+change the value of node s to x
+calculate the sum of values on the path from the root to node s
+</details>
+
+<details>
+  <summary>Idea</summary>
+  
+- idea is similar to previous ques. every node has two indices. put negative of node on second index.
+- during query, nodes which are not in the required path will get cancelled.
+- during update, put negative on second index
+  
+<img width="1390" height="770" alt="image" src="https://github.com/user-attachments/assets/b44e2beb-dbfb-424b-8e6c-e88e2b42143e" />
+
+</details>
+
+
+
+
+
+
+
