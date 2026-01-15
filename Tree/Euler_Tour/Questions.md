@@ -140,8 +140,83 @@ calculate the sum of values on the path from the root to node s
 
 </details>
 
+___
+
+### Question - [https://codeforces.com/problemset/problem/1328/E](https://codeforces.com/problemset/problem/1328/E)
+Tree Queries
+
+<details>
+  <summary>Description</summary>
+You are given a rooted tree consisting of n nodes. In each query, you are given a set of nodes. You have to determine if there is a node u such that all the nodes of the given set are in the path from root(1) to node 2 or 1 distance away from any vertex in that path.
+
+  <img width="1016" height="796" alt="image" src="https://github.com/user-attachments/assets/2d5d13f8-e789-40c6-8133-65182a2ccf76" />
+
+</details>
+
+<details>
+  <summary>Idea</summary>
+
+- the idea is type 1 euler tour (LCA)
+- suppose query is 3 8 9 10
+- find the node with largest level (10)
+- if there is path, it will be from 10 to 1 (we don't have to find the shortest path)
+- now one by one for each node in set, check its lca with 10
+- if lca(n,10) = n, it will be in the path
+- if not then, check the difference level(lca(n,10) - level(n) <= 1. if it is atmost 1, then it can be considered.
+- otherwise not.
+- **Can use binary lifting to find LCA.**
+
+  
+<img width="1541" height="806" alt="image" src="https://github.com/user-attachments/assets/204f4503-13eb-4718-9632-7c554dd37611" />
 
 
+</details>
+  
+<details>
+  <summary>
+    Sample Code
+  </summary>
+
+```
+Initialize dp[n+1][21] to 0
+Initialize level[n+1] to 0
+
+DFS(1, parent = 0)           // fills dp table and level array
+
+while m > 0:
+    m = m - 1
+
+    read k
+    read array A of size k
+
+    maxLevel = -∞
+    deepestNode = 0
+
+    // find the deepest node in the query
+    for each x in A:
+        if level[x] > maxLevel:
+            maxLevel = level[x]
+            deepestNode = x
+
+    valid = true
+
+    // check condition using LCA
+    for each x in A:
+        ancestor = LCA(deepestNode, x)
+
+        if |level[ancestor] - level[x]| > 1:
+            valid = false
+            break
+
+    if valid:
+        print "YES"
+    else:
+        print "NO"
+
+
+```
+  
+</details>
 
 
 
