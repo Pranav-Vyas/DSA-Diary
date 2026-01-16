@@ -1,14 +1,43 @@
-### Rerooting dp
+
+### Rerooting DP
 
 - Rerooting means we calculate the result by making each node the root of the tree.
 - one DP array is responsible for calculating results within the subtree rooted at $i$. The other DP array calculates results outside of the subtree rooted at $i$.
 
-##### Problem - [https://cses.fi/problemset/task/1132](https://cses.fi/problemset/task/1132)
+#### Q. Tree Distances I - [https://cses.fi/problemset/task/1132](https://cses.fi/problemset/task/1132)
+
+<details>
+<summary>Idea</summary>
 
 - The focus problem asks us to find for each node the maximum distance to another node. We can divide the problem into two parts.
 - Define $f[x]$ as the maximum distance from node $x$ to any node in the subtree rooted at $x$, and $g[x]$ as the maximum distance from node $x$ to any node outside of the subtree rooted at $x$. Then the answer for node $x$ is $\max(f[x],g[x])$.
 - $f[x]$ can be calculated using a DFS since $f[x]=\max(f[c])+1$, where $c$ is a child of $x$.
 - $g[x]$ can also be calculated using a DFS as $g[c]=\max(g[x]+1, f[d]+2)$, where $c$ and $d$ are both children of $x$ with $c \neq d$.
+
+- in[node] → longest path going down
+
+- out[node] → longest path going up or through parent
+- mx1 (maximum path)
+The largest value of 1 + in[child] among all children of the current node.
+It represents the longest downward path starting from the current node through one of its children.
+
+- mx2 (second maximum path)
+The second largest value of 1 + in[child].
+This is needed as a backup when the best path (mx1) comes from the same child we are currently propagating to.
+
+- heavyChild
+The child that produces mx1 (i.e., the child with the deepest subtree).
+When computing out[child], we must not reuse the child’s own path, otherwise we would count the same path twice.
+
+- Final answer per node = max(in[node], out[node])
+
+- Overall complexity: O(N)
+
+
+<img width="1505" height="781" alt="image" src="https://github.com/user-attachments/assets/78514e6c-f4ef-4a6e-b434-fe0a8f86cc44" />
+    
+</details>
+
 
 <details>
 <summary>Sample code</summary>
@@ -78,24 +107,152 @@ solve()
 ```
 </details>
 
-- in[node] → longest path going down
 
-- out[node] → longest path going up or through parent
-- mx1 (maximum path)
-The largest value of 1 + in[child] among all children of the current node.
-It represents the longest downward path starting from the current node through one of its children.
 
-- mx2 (second maximum path)
-The second largest value of 1 + in[child].
-This is needed as a backup when the best path (mx1) comes from the same child we are currently propagating to.
 
-- heavyChild
-The child that produces mx1 (i.e., the child with the deepest subtree).
-When computing out[child], we must not reuse the child’s own path, otherwise we would count the same path twice.
+___ 
 
-- Final answer per node = max(in[node], out[node])
+#### Q. Tree Distances II - [https://cses.fi/problemset/task/1133](https://cses.fi/problemset/task/1133)
 
-- Overall complexity: O(N)
+- approach is similar to above problem
+- dfs() computes:
+    - subtree[node] → subtree size
+    - in[node] → sum of distances from node to nodes in its subtree
+- dfs2() reroots DP using:
+    ```  dp[child] = dp[parent] + n - 2 * subtree[child] ```
+- Final dp[i] gives sum of distances from node i to all other nodes
 
-<img width="1505" height="781" alt="image" src="https://github.com/user-attachments/assets/78514e6c-f4ef-4a6e-b434-fe0a8f86cc44" />
+<details>
+<summary>Code</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+
+using ll = long long;
+
+const int MAXN = 200005;
+
+ll dp[MAXN];        // sum of distances from node to all others
+ll subtree[MAXN];   // size of subtree
+ll in[MAXN];        // sum of distances within subtree
+ll n;
+
+vector<ll> adj[MAXN];
+
+void dfs(ll node, ll parent) {
+    subtree[node] = 1;
+    in[node] = 0;
+
+    for (auto child : adj[node]) {
+        if (child == parent) continue;
+
+        dfs(child, node);
+
+        subtree[node] += subtree[child];
+        in[node] += in[child] + subtree[child];
+    }
+}
+
+void dfs2(ll node, ll parent) {
+    for (auto child : adj[node]) {
+        if (child == parent) continue;
+
+        dp[child] = dp[node] + n - 2 * subtree[child];
+        dfs2(child, node);
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    cin >> n;
+
+    for (ll i = 0; i < n - 1; i++) {
+        ll u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    dfs(1, 0);
+    dp[1] = in[1];
+    dfs2(1, 0);
+
+    for (ll i = 1; i <= n; i++) {
+        cout << dp[i] << " ";
+    }
+
+    return 0;
+}
+
+
+```
+    
+</details>
+
+___
+
+### Other Questions On DP
+#### Q. Tree Matching - [https://cses.fi/problemset/task/1130](https://cses.fi/problemset/task/1130)
+
+A matching is a set of edges where each node is an endpoint of at most one edge. What is the maximum number of edges in a matching?
+
+<details>
+
+<summary>Code</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int main()
+{
+    int n;
+    cin>>n;
+    vector<vector<int>> adj(n, vector<int>());
+    for (int i=0; i<n-1; i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u-1].push_back(v-1);
+        adj[v-1].push_back(u-1);
+    }
+    vector<vector<int>> dp(n, {-1,-1});
+    function<int(int, int, int)> dfs = [&](int u, int par, int taken){
+        if (dp[u][taken] != -1){
+            return dp[u][taken];
+        }
+        // first take all the children without taking that edge
+        int res = 0;
+        for (int v: adj[u]){
+            if (v == par) continue;
+            res += dfs(v, u, 0);
+        }
+        // now only one edge can be added. If we take two children edges, it will be wrong
+        int temp = res;
+        if (taken == 0){
+            for (int v: adj[u]){
+                if (v == par) continue;
+                int cur = temp + dfs(v, u, 1) + 1 - dp[v][0];
+                res = max(res, cur);
+            }
+        }
+        return dp[u][taken] = res;
+        
+    };
+    cout<< dfs(0, -1, 0)<<endl;
+ 
+    return 0;
+}
+
+```
+
+</details>
+
+
+
+
 
