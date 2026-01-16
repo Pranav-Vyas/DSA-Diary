@@ -111,3 +111,110 @@ int main()
 ```
 </details>
 
+
+### Question: Distance Queries - [https://cses.fi/alon/task/1135/](https://cses.fi/alon/task/1135/)
+
+You are given a tree consisting of n nodes. Your task is to process q queries of the form: what is the distance between nodes a and b?
+
+<details>
+<summary>
+  Intuition
+</summary>
+    
+- use the concept of lca.
+- there is no root given in the tree, so assume 1 to be the root. (lca will change based on root, but it does not matter in this question as we don't have to find the correct lca).
+- after getting lca, find the difference of levels between nodes and lca and then add them.
+
+</details>
+
+<details>
+<summary>
+  Code
+</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+const int LOG = 20;
+ 
+void dfs(int u, int p, int d, vector<int> adj[], vector<vector<int>>& dp, vector<int>& levels) {
+    levels[u] = d;
+    dp[u][0] = p;
+    for (int i = 1; i < LOG; i++) {
+        dp[u][i] = dp[dp[u][i - 1]][i - 1];
+    }
+    for (int v : adj[u]) {
+        if (v != p) {
+            dfs(v, u, d + 1, adj, dp, levels);
+        }
+    }
+}
+ 
+void fillLevel(int u, int par, vector<int> adj[], vector<int>& levels){
+    for (int v: adj[u]){
+        if (v != par){
+            levels[v] = levels[u]+1;
+            fillLevel(v, u, adj, levels);
+        }
+    }
+}
+ 
+int getKthPar(int node, int k, vector<vector<int>>& dp){
+    for (int i=19; i>=0; i--){
+        if ((k >> i) & 1){
+            node = dp[node][i];
+        }
+    }
+    return node;
+}
+ 
+int findLca(int u, int v, vector<int> adj[], vector<int>& levels, vector<vector<int>>& dp){
+    if (levels[u] > levels[v]){
+        return findLca(v, u, adj, levels, dp);
+    }
+    int dif = levels[v] - levels[u];
+    v = getKthPar(v, dif, dp);
+    if (u == v) return u;
+    for (int i=19; i>=0; i--){
+        if (dp[u][i] != dp[v][i]){
+            u = dp[u][i];
+            v = dp[v][i];
+        }
+    }
+    return dp[u][0];
+}
+ 
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int n, q;
+    cin>>n>>q;
+    vector<int> adj[n+1];
+    for (int i=0; i<n-1; i++){
+        int a,b;
+        cin>>a>>b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+    vector<vector<int>> dp(n+1, vector<int>(20,0));
+    vector<int> levels(n+1, 0);
+    dfs(1, 0, 0, adj, dp, levels);
+    fillLevel(1, -1, adj, levels);
+    
+    while (q--){
+        int a, b;
+        cin>>a>>b;
+        int lca = findLca(a, b, adj, levels, dp);
+        int res = levels[a] - levels[lca] + levels[b] - levels[lca];
+        cout << res << "\n";
+    }
+}
+
+
+```
+
+</details>
+
+
