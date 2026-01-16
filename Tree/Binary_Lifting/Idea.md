@@ -54,6 +54,7 @@ int main()
     }
 }
 ```
+___
 
 ### LCA using binary lifting
 
@@ -111,6 +112,7 @@ int main()
 ```
 </details>
 
+___
 
 ### Question: Distance Queries - [https://cses.fi/alon/task/1135/](https://cses.fi/alon/task/1135/)
 
@@ -216,5 +218,137 @@ int main()
 ```
 
 </details>
+
+___
+
+### Question: Counting Paths - [https://cses.fi/problemset/task/1136/](https://cses.fi/problemset/task/1136/)
+You are given a tree consisting of n nodes, and m paths in the tree. Your task is to calculate for each node the number of paths containing that node.
+
+<details>
+
+<summary>Idea</summary>
+
+- Instead of updating every node on the path individually ($O(N)$ per query), we use a difference array logic to make each query $O(\log N)$.
+- For a path between nodes $u$ and $v$ with their lowest common ancestor $L$, we update the res[] array:res[u]++ and res[v]++:
+- Mark the start and end of the path.res[L]--:
+- Since both $u$ and $v$ paths meet at $L$, the $+1$ from both sides would make $L$ count as $2$. We subtract once so $L$ counts as $1$.res[parent[L]]--: This stops the path "signal" from propagating further up the tree beyond the LCA.
+- We use a Bottom-Up DFS (or post-order traversal).For each node $u$, res[u] = res[u] + sum(res[v]) for all children $v$.
+- This "sweeps" the difference signals from the leaves up to the root, correctly accumulating the number of paths passing through each node.
+- Time Complexity: $O((N+M) \log N)$
+
+</details>
+
+<details>
+
+<summary>Code</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+const int LOG = 20;
+
+void dfs(int u, int p, int d, vector<int> adj[], vector<vector<int>>& dp, vector<int>& levels) {
+    levels[u] = d;
+    dp[u][0] = p;
+    for (int i = 1; i < LOG; i++) {
+        dp[u][i] = dp[dp[u][i - 1]][i - 1];
+    }
+    for (int v : adj[u]) {
+        if (v != p) {
+            dfs(v, u, d + 1, adj, dp, levels);
+        }
+    }
+}
+
+void fillLevel(int u, int par, vector<int> adj[], vector<int>& levels, vector<int>& parent){
+    parent[u] = par;
+    for (int v: adj[u]){
+        if (v != par){
+            levels[v] = levels[u]+1;
+            fillLevel(v, u, adj, levels, parent);
+        }
+    }
+}
+
+int getKthPar(int node, int k, vector<vector<int>>& dp){
+    for (int i=19; i>=0; i--){
+        if ((k >> i) & 1){
+            node = dp[node][i];
+        }
+    }
+    return node;
+}
+
+int findLca(int u, int v, vector<int> adj[], vector<int>& levels, vector<vector<int>>& dp){
+    if (levels[u] > levels[v]){
+        return findLca(v, u, adj, levels, dp);
+    }
+    int dif = levels[v] - levels[u];
+    v = getKthPar(v, dif, dp);
+    if (u == v) return u;
+    for (int i=19; i>=0; i--){
+        if (dp[u][i] != dp[v][i]){
+            u = dp[u][i];
+            v = dp[v][i];
+        }
+    }
+    return dp[u][0];
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int n, m;
+    cin>>n>>m;
+    vector<int> adj[n+1];
+    for (int i=0; i<n-1; i++){
+        int a,b;
+        cin>>a>>b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+    vector<vector<int>> dp(n+1, vector<int>(20,0));
+    vector<int> levels(n+1, 0);
+    vector<int> parent(n+1, -1);
+    dfs(1, 0, 0, adj, dp, levels);
+    fillLevel(1, -1, adj, levels, parent);
+    vector<int> res(n+1,0);
+    
+    while (m--){
+        int a, b;
+        cin>>a>>b;
+        int lca = findLca(a, b, adj, levels, dp);
+        res[a]++;
+        res[b]++;
+        res[lca]--;
+        if (parent[lca] != -1){
+            res[parent[lca]]--;
+        }
+    }
+    
+    function<void(int,int)> addPaths = [&](int u, int par){
+        for (int v: adj[u]){
+            if (v == par) continue;
+            addPaths(v,u);
+            res[u] += res[v];
+        }
+    };
+    addPaths(1,-1);
+    for (int i=1; i<=n; i++){
+        cout<<res[i]<<" ";
+    }
+    cout<<"\n";
+    
+}
+
+
+
+```
+
+</details>
+
+
 
 
