@@ -441,6 +441,88 @@ int main() {
 
 </details>
 
+___
+
+#### Q. Tree with Maximum Cost - [https://codeforces.com/problemset/problem/1092/F](https://codeforces.com/problemset/problem/1092/F)
+
+<details>
+<summary>Description</summary>
+
+<img width="1101" height="347" alt="image" src="https://github.com/user-attachments/assets/b24fa504-00bf-4b62-a04b-a8aeb7273bef" />
+
+<img width="1161" height="680" alt="image" src="https://github.com/user-attachments/assets/d923f4c3-f68b-4ccb-b5a4-e9445e5ad480" />
+
+</details>
+
+<details>
+
+<summary>Code</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+vector<int> a;
+vector<long long> dp;
+vector<long long> subtree;
+vector<vector<int>> g;
+
+void dfs(int v, int p = -1) {
+	subtree[v] = a[v];
+	for (auto to : g[v]) {
+		if (to == p) continue;
+		dfs(to, v);
+		subtree[v] += subtree[to];
+		dp[v] += (dp[to] + subtree[to]);
+	}
+}
+
+void dfs2(int v, int p = -1) {
+	for (auto to : g[v]) {
+		if (to == p) continue;
+		long long res = (dp[v] - dp[to] - subtree[to] + subtree[0] - subtree[to]);
+		dp[to] += res;
+		dfs2(to, v);
+	}
+}
+
+int main() {
+	
+	int n;
+	cin >> n;
+	a = vector<int>(n);
+	dp = vector<long long>(n);
+	g = vector<vector<int>>(n);
+	subtree = vector<long long>(n);
+	for (int i = 0; i < n; ++i) {
+		cin >> a[i];
+	}
+	for (int i = 0; i < n - 1; ++i) {
+		int x, y;
+		cin >> x >> y;
+		--x, --y;
+		g[x].push_back(y);
+		g[y].push_back(x);
+	}
+	
+	dfs(0);
+	dfs2(0);
+	long long ans = 0;
+	for (int i=0; i<n; i++){
+	    ans = max(ans,  dp[i]);
+	}
+	
+	cout << ans << endl;
+	
+	return 0;
+}
+
+
+```
+
+</details>
 
 
 
