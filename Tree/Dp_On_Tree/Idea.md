@@ -356,11 +356,90 @@ int main() {
 
 </details>
 
+___
 
+#### Q. Maximum White Subtree - [https://codeforces.com/problemset/problem/1324/F](https://codeforces.com/problemset/problem/1324/F)
 
+You are given a tree consisting of n vertices. A tree is a connected undirected graph with n−1 edges. Each vertex v of this tree has a color assigned to it (av=1 if the vertex v is white and 0 if the vertex v is black).  
+You have to solve the following problem for each vertex v: what is the maximum difference between the number of white and the number of black vertices you can obtain if you choose some subtree of the given tree that contains the vertex v ? The subtree of the tree is the connected subgraph of the given tree. More formally, if you choose the subtree that contains cntw white vertices and cntb black vertices, you have to maximize cntw−cntb.
 
+<details>
 
+<summary>Idea</summary>
 
+<img width="1079" height="351" alt="image" src="https://github.com/user-attachments/assets/29b1e7a3-e67f-465a-b201-d76abc683818" />
+
+</details>
+
+<details>
+
+<summary>Code</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+vector<int> a;
+vector<int> dp;
+vector<int> ans;
+vector<vector<int>> g;
+
+void dfs(int v, int p = -1) {
+	dp[v] = a[v];
+	for (auto to : g[v]) {
+		if (to == p) continue;
+		dfs(to, v);
+		dp[v] += max(dp[to], 0);
+	}
+}
+
+void dfs2(int v, int p = -1) {
+	ans[v] = dp[v];
+	for (auto to : g[v]) {
+		if (to == p) continue;
+		dp[v] -= max(0, dp[to]);
+		dp[to] += max(0, dp[v]);
+		dfs2(to, v);
+		dp[to] -= max(0, dp[v]);
+		dp[v] += max(0, dp[to]);
+	}
+}
+
+int main() {
+#ifdef _DEBUG
+	freopen("input.txt", "r", stdin);
+//	freopen("output.txt", "w", stdout);
+#endif
+	
+	int n;
+	cin >> n;
+	a = dp = ans = vector<int>(n);
+	g = vector<vector<int>>(n);
+	for (int i = 0; i < n; ++i) {
+		cin >> a[i];
+		if (a[i] == 0) a[i] = -1;
+	}
+	for (int i = 0; i < n - 1; ++i) {
+		int x, y;
+		cin >> x >> y;
+		--x, --y;
+		g[x].push_back(y);
+		g[y].push_back(x);
+	}
+	
+	dfs(0);
+	dfs2(0);
+	for (auto it : ans) cout << it << " ";
+	cout << endl;
+	
+	return 0;
+}
+
+```
+
+</details>
 
 
 
