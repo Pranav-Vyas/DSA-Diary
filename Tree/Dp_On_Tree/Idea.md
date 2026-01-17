@@ -252,6 +252,117 @@ int main()
 
 </details>
 
+___
+
+#### Q. Three Paths on a Tree - [https://codeforces.com/problemset/problem/1294/F](https://codeforces.com/problemset/problem/1294/F)
+
+Given a tree. Your task is to choose three distinct vertices a,b,c on this tree such that the number of edges which belong to at least one of the simple paths between a and b, b and c, or a and c is the maximum possible. See the notes section for a better understanding. The simple path is the path that visits each vertex at most once.
+
+<details>
+
+<summary>Idea</summary>
+Find some diameter of the tree. Let a and b be the endpoints of this diameter (and first two vertices of the answer). You can prove yourself why it is always good to take the diameter and why any diameter can be taken in the answer. Then there are two cases: the length of the diameter is n−1 or the length of the diameter is less than n−1. In the first case, you can take any other vertex as the third vertex of the answer c, it will not affect the answer anyway. Otherwise, we can run multi-source bfs from all vertices of the diameter and take the farthest vertex as the third vertex of the answer. It is always true because we can take any diameter and the farthest vertex will increase the answer as much as possible.
+
+- To find the diameter, first take any vertex(x) and find a vertex(a) which is at largest distance from x. 
+- 'a' will be one end of diameter. Then find other vertex 'b' which is at largest dist from 'a'.
+- a and b will be two end of diameter.
+</details>
+
+<details>
+
+<summary>Code</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define x first
+#define y second
+
+vector<int> p;
+vector<vector<int>> g;
+
+pair<int, int> dfs(int v, int par = -1, int dist = 0) {
+	p[v] = par;
+	pair<int, int> res = make_pair(dist, v);
+	for (auto to : g[v]) {
+		if (to == par) continue;
+		res = max(res, dfs(to, v, dist + 1));
+	}
+	return res;
+}
+
+int main() {
+#ifdef _DEBUG
+	freopen("input.txt", "r", stdin);
+//	freopen("output.txt", "w", stdout);
+#endif
+	
+	int n;
+	cin >> n;
+	p = vector<int>(n);
+	g = vector<vector<int>>(n);
+	for (int i = 0; i < n - 1; ++i) {
+		int x, y;
+		cin >> x >> y;
+		--x, --y;
+		g[x].push_back(y);
+		g[y].push_back(x);	
+	}
+	
+	
+	pair<int, int> da = dfs(0);
+	pair<int, int> db = dfs(da.y);
+	vector<int> diam;
+	int v = db.y;
+	while (v != da.y) {
+		diam.push_back(v);
+		v = p[v];
+	}
+	diam.push_back(da.y);
+	
+	if (int(diam.size()) == n) {
+		cout << n - 1 << " " << endl << diam[0] + 1 << " " << diam[1] + 1 << " " << diam.back() + 1 << endl;
+	} else {
+		queue<int> q;
+		vector<int> d(n, -1);
+		for (auto v : diam) {
+			d[v] = 0;
+			q.push(v);
+		}
+		while (!q.empty()) {
+			int v = q.front();
+			q.pop();
+			for (auto to : g[v]) {
+				if (d[to] == -1) {
+					d[to] = d[v] + 1;
+					q.push(to);
+				}
+			}
+		}
+		pair<int, int> mx = make_pair(d[0], 0);
+		for (int v = 1; v < n; ++v) {
+			mx = max(mx, make_pair(d[v], v));
+		}
+		cout << int(diam.size()) - 1 + mx.x << endl << diam[0] + 1 << " " << mx.y + 1 << " " << diam.back() + 1 << endl;
+	}
+	
+	return 0;
+}
+
+```
+
+</details>
+
+
+
+
+
+
+
+
 
 
 
