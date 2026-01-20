@@ -1,0 +1,6 @@
+- for point update, seg tree has TC = O(logN), but for range update we have to use lazy update to achieve that.
+- make a lazy arr to store lazy values.
+- during partial overlap, propagate lazy values to children during recursive call.
+- during complete overlap, just add the lazy value and return from there.
+- range update TC = logN
+- range query TC = logN
