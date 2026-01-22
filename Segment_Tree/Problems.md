@@ -267,3 +267,89 @@ int main()
 
 </details>
 
+
+
+#### [Xenia and Bit Operations](https://codeforces.com/problemset/problem/339/D)
+
+<details>
+<summary>Code
+</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+ 
+vector<int> tree;
+ 
+void build(vector<int>& arr, int idx, int start, int end, int level, int n){
+    // time complexity = O(N)
+    if (start == end){
+        tree[idx] = arr[start];
+        return;
+    }
+    int mid = (start + end) >> 1;
+    build(arr, 2*idx+1, start, mid, level+1, n);
+    build(arr, 2*idx+2, mid+1, end, level+1, n);
+    int dif = n - level;
+    if (dif & 1){
+        tree[idx] = (tree[2*idx+1] | tree[2*idx+2]);
+    } else {
+        tree[idx] = (tree[2*idx+1] ^ tree[2*idx+2]);
+        
+    }
+}
+ 
+// start and end of arr. idx is of seg-tree, pos is of arr.
+// point update at pos
+// time complexity = logN
+void update(vector<int>& arr, int start, int end, int idx, int pos, int value, int level, int n){
+    // leaf
+    if (start == end){
+        arr[pos] = value;
+        tree[idx] = value;
+        return;
+    }
+    int mid = (start + end) >>1;
+    if (mid >= pos){
+        update(arr, start, mid, 2*idx+1, pos, value, level+1, n);
+    } else {
+        update(arr, mid+1, end, 2*idx+2, pos, value, level+1, n);
+        
+    }
+    int dif = n - level;
+    if (dif & 1){
+        tree[idx] = (tree[2*idx+1] | tree[2*idx+2]);
+    } else {
+        tree[idx] = (tree[2*idx+1] ^ tree[2*idx+2]);
+        
+    }
+}
+ 
+ 
+int main()
+{
+    int n,m;
+    cin>>n>>m;
+    int len = 1 << n;
+    tree.resize(4*len, 0);
+    vector<int> arr(len);
+    for (auto &i: arr){
+        cin >> i;
+    }
+    build(arr,0,0,len-1,0,n);
+    while(m--){
+        int x, y;
+        cin>>x>>y;
+        update(arr, 0, len-1, 0, x-1, y, 0, n);
+        cout<<tree[0]<<endl;
+    }
+ 
+    return 0;
+}
+
+```
+
+</details>
+
+
