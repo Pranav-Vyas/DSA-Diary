@@ -358,7 +358,7 @@ int main()
 #### [Sereja and Brackets](https://codeforces.com/problemset/problem/380/C)
 
 <details>
-<summary>Explaination</summary>
+<summary>Explanation</summary>
 
 Each node of the segment tree stores two integers:
 - open → number of unmatched opening brackets (
@@ -371,6 +371,8 @@ For a given range [𝑙,𝑟][l,r], the query function returns a node containing
 in that substring, after all possible valid matches inside the range are cancelled.
 Using these values, the length of the longest correct bracket subsequence is computed as:
 ``` (r−l+1)−(open+close) ```
+
+**Note**: use struct instead of vector to avoid TLE (see in code).
  
 </details>
 
