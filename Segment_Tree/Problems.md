@@ -353,3 +353,128 @@ int main()
 </details>
 
 
+## Advanced
+
+#### [Sereja and Brackets](https://codeforces.com/problemset/problem/380/C)
+
+<details>
+<summary>Explaination</summary>
+
+Each node of the segment tree stores two integers:
+- open → number of unmatched opening brackets (
+
+- close → number of unmatched closing brackets )
+
+For a given range [𝑙,𝑟][l,r], the query function returns a node containing:
+- the number of unmatched opening brackets
+- the number of unmatched closing brackets
+in that substring, after all possible valid matches inside the range are cancelled.
+Using these values, the length of the longest correct bracket subsequence is computed as:
+``` (r−l+1)−(open+close) ```
+ 
+</details>
+
+<details>
+<summary>Code
+</summary>
+
+``` cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    int open, close;
+};
+
+vector<Node> tree;
+
+void merge(int idx){
+    int l = 2*idx+1;
+    int r = 2*idx+2;
+
+    int lopen = tree[l].open;
+    int lclosed = tree[l].close;
+    int ropen = tree[r].open;
+    int rclosed = tree[r].close;
+
+    if (lopen >= rclosed){
+        lopen -= rclosed;
+        rclosed = 0;
+    } else {
+        rclosed -= lopen;
+        lopen = 0;
+    }
+
+    tree[idx].open = lopen + ropen;
+    tree[idx].close = lclosed + rclosed;
+}
+
+void build(string& s, int idx, int start, int end){
+    if (start == end){
+        if (s[start] == '('){
+            tree[idx].open++;
+        } else {
+            tree[idx].close++;
+        }
+        return;
+    }
+    int mid = (start + end) >> 1;
+    build(s, 2*idx+1, start, mid);
+    build(s, 2*idx+2, mid+1, end);
+    merge(idx);
+}
+
+Node query(string& s, int idx, int start, int end, int l, int r){
+    if (r < start || l > end){
+        return {0, 0};
+    }
+    if (start >= l && end <= r){
+        return tree[idx];
+    }
+
+    int mid = (start + end) >> 1;
+    Node left = query(s, 2*idx+1, start, mid, l, r);
+    Node right = query(s, 2*idx+2, mid+1, end, l, r);
+
+    int lopen = left.open;
+    int lclosed = left.close;
+    int ropen = right.open;
+    int rclosed = right.close;
+
+    if (lopen >= rclosed){
+        lopen -= rclosed;
+        rclosed = 0;
+    } else {
+        rclosed -= lopen;
+        lopen = 0;
+    }
+
+    return {lopen + ropen, lclosed + rclosed};
+}
+
+int main()
+{
+    string s;
+    int m;
+    cin >> s >> m;
+    int n = s.size();
+
+    tree.resize(4*n, {0, 0});
+    build(s, 0, 0, n-1);
+
+    while (m--){
+        int l, r;
+        cin >> l >> r;
+        Node res = query(s, 0, 0, n-1, l-1, r-1);
+        cout << (r - l + 1 - res.open - res.close) << endl;
+    }
+
+    return 0;
+}
+
+```
+
+</details>
+
+
