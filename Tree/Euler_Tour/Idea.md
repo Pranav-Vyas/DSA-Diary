@@ -39,8 +39,16 @@ void dfs(int node, int par){
 }
 
 // call dfs to get flat array
+// mp[node] = first index where `node` appears in flat[]
 // then using bfs, find level array 
 // then apply range query for each LCA
+// Suppose you want LCA(u, v)
+// You take:
+l = mp[u];
+r = mp[v];
+if (l > r) swap(l, r);
+// Run RMQ on the level array over range [l, r]
+// The node with minimum level in that range is the LCA
 ```
   
 </details>
