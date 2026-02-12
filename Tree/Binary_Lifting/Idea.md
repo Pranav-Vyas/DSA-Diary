@@ -99,6 +99,10 @@ ___
             int diff = level[b] - level[a];
             // bring a and b on same level
             b = getKpar(b, diff);
+            if (a == b){
+                cout<<a<<endl;
+                continue;
+            }
             for (int i=16; i>=0; i++){
                 if (dp[a][i] != dp[b][i]){
                     a = dp[a][i];
