@@ -353,6 +353,10 @@ int main()
 
 </details>
 
+___
 
+### More Problems
+
+- [https://leetcode.com/problems/minimum-edge-weight-equilibrium-queries-in-a-tree/description/](https://leetcode.com/problems/minimum-edge-weight-equilibrium-queries-in-a-tree/description/)
 
 
