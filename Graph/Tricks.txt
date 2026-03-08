@@ -6,3 +6,20 @@ Check if any of the below methods work:
 - Topo sort - method 1
 - Topo sort - Kahn's algo
 - Reverse Edges
+
+Trick 1 - BFS on an expanded state space using a bitmask.
+Consider this question: https://leetcode.com/problems/shortest-path-to-get-all-keys/description/
+
+Why Normal BFS Is Not Enough
+
+Normally for grid shortest path problems we track:
+visited[row][col]
+But here this is incorrect.
+
+Example scenario:
+You reach cell (2,3) without key 'a'
+Later you return to (2,3) with key 'a'
+
+These two states are different, because now you can open door A. So the state must include the keys you currently hold.
+
+State representation: (row, col, keys_bitmask)
